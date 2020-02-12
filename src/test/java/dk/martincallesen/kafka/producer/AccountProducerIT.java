@@ -32,7 +32,11 @@ public class AccountProducerIT {
                 .setReg(1234)
                 .setNumber(1234567890)
                 .build();
-        accountProducer.send(TOPIC, accountChange).addCallback(new ListenableFutureCallback<SendResult<String, Account>>() {
+        accountProducer.send(TOPIC, accountChange).addCallback(expectSendSuccess());
+    }
+
+    private ListenableFutureCallback<SendResult<String, Account>> expectSendSuccess() {
+        return new ListenableFutureCallback<SendResult<String, Account>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 fail("Sending");
@@ -42,6 +46,6 @@ public class AccountProducerIT {
             public void onSuccess(SendResult<String, Account> sendResult) {
                 assertNotNull(sendResult);
             }
-        });
+        };
     }
 }
