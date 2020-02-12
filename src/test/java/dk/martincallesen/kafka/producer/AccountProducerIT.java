@@ -6,8 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.support.SendResult;
-import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
@@ -16,14 +16,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@ActiveProfiles("test")
 @EmbeddedKafka(topics = AccountProducerIT.TOPIC,
         bootstrapServersProperty = "spring.kafka.bootstrap-servers")
 public class AccountProducerIT {
     public static final String TOPIC = "test-account-topic";
-
-    static {
-        System.setProperty(EmbeddedKafkaBroker.BROKER_LIST_PROPERTY, "spring.kafka.bootstrap-servers");
-    }
 
     @Autowired
     private AccountProducer accountProducer;
