@@ -1,6 +1,6 @@
 package dk.martincallesen.kafka;
 
-import dk.martincallesen.kafka.domain.Account;
+import dk.martincallesen.datamodel.event.Account;
 import dk.martincallesen.kafka.producer.AccountProducer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

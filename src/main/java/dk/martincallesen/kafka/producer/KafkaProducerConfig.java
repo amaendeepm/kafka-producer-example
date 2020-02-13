@@ -1,6 +1,6 @@
 package dk.martincallesen.kafka.producer;
 
-import dk.martincallesen.kafka.domain.Account;
+import dk.martincallesen.datamodel.event.Account;
 import dk.martincallesen.kafka.serializer.AvroSerializer;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;

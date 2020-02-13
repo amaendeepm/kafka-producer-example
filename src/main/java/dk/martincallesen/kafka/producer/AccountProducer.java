@@ -1,6 +1,6 @@
 package dk.martincallesen.kafka.producer;
 
-import dk.martincallesen.kafka.domain.Account;
+import dk.martincallesen.datamodel.event.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;

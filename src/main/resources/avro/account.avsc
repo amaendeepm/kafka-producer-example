@@ -1,4 +1,4 @@
-{"namespace": "dk.martincallesen.kafka.domain",
+{"namespace": "dk.martincallesen.datamodel.event",
   "type": "record",
   "name": "Account",
   "fields": [
