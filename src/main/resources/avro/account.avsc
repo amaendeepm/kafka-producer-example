@@ -1,9 +1,0 @@
-{"namespace": "dk.martincallesen.datamodel.event",
-  "type": "record",
-  "name": "Account",
-  "fields": [
-    {"name": "name", "type": "string"},
-    {"name": "reg",  "type": ["int", "null"]},
-    {"name": "number",  "type": ["int", "null"]}
-  ]
-}
