@@ -1,8 +1,7 @@
 package dk.martincallesen.kafka.producer;
 
-import dk.martincallesen.datamodel.event.Account;
 import dk.martincallesen.datamodel.event.SpecificRecordAdapter;
-import dk.martincallesen.kafka.serializer.AvroSerializer;
+import dk.martincallesen.kafka.serializer.KafkaSerializer;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -30,7 +29,7 @@ public class KafkaProducerConfig {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, AvroSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaSerializer.class);
 
         return props;
     }
