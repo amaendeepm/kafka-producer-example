@@ -1,6 +1,7 @@
 package dk.martincallesen.kafka.producer;
 
 import dk.martincallesen.datamodel.event.Account;
+import dk.martincallesen.datamodel.event.SpecificRecordAdapter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,23 +28,24 @@ public class AccountProducerIT {
 
     @Test
     void sendAccountChangeEvent() {
-        Account accountChange = Account.newBuilder()
+        Account accountEvent = Account.newBuilder()
                 .setName("MyAccount")
                 .setReg(1234)
                 .setNumber(1234567890)
                 .build();
-        accountProducer.send(TOPIC, accountChange).addCallback(expectSendSuccess());
+        final SpecificRecordAdapter recordAdapter = new SpecificRecordAdapter(accountEvent);
+        accountProducer.send(TOPIC, recordAdapter).addCallback(expectSendSuccess());
     }
 
-    private ListenableFutureCallback<SendResult<String, Account>> expectSendSuccess() {
-        return new ListenableFutureCallback<SendResult<String, Account>>() {
+    private ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>> expectSendSuccess() {
+        return new ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 fail("Sending");
             }
 
             @Override
-            public void onSuccess(SendResult<String, Account> sendResult) {
+            public void onSuccess(SendResult<String, SpecificRecordAdapter> sendResult) {
                 assertNotNull(sendResult);
             }
         };

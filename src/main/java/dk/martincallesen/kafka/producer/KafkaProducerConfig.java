@@ -1,6 +1,7 @@
 package dk.martincallesen.kafka.producer;
 
 import dk.martincallesen.datamodel.event.Account;
+import dk.martincallesen.datamodel.event.SpecificRecordAdapter;
 import dk.martincallesen.kafka.serializer.AvroSerializer;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -35,12 +36,12 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, Account> producerFactory() {
+    public ProducerFactory<String, SpecificRecordAdapter> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfigs());
     }
 
     @Bean
-    public KafkaTemplate<String, Account> kafkaTemplate() {
+    public KafkaTemplate<String, SpecificRecordAdapter> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 

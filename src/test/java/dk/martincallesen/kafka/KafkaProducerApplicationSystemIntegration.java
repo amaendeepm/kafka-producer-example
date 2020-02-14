@@ -1,6 +1,7 @@
 package dk.martincallesen.kafka;
 
 import dk.martincallesen.datamodel.event.Account;
+import dk.martincallesen.datamodel.event.SpecificRecordAdapter;
 import dk.martincallesen.kafka.producer.AccountProducer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -22,15 +23,15 @@ class KafkaProducerApplicationSystemIntegration {
                 .setReg(4321)
                 .setNumber(1987654321)
                 .build();
-        accountProducer.send(accountChange).addCallback(new ListenableFutureCallback<SendResult<String, Account>>() {
+        accountProducer.send(new SpecificRecordAdapter(accountChange)).addCallback(new ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 Assertions.fail("Failed to send account");
             }
 
             @Override
-            public void onSuccess(SendResult<String, Account> stringAccountSendResult) {
-                Assertions.assertNotNull(stringAccountSendResult, "Failed to send account");
+            public void onSuccess(SendResult<String, SpecificRecordAdapter> sendResult) {
+                Assertions.assertNotNull(sendResult, "Failed to send account");
             }
         });
     }
