@@ -18,12 +18,12 @@ public class SendResultLogger {
         return new ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>>() {
             @Override
             public void onFailure(Throwable throwable) {
-                logger.warn("Failed to send {} on {} ", event, topic);
+                logger.warn("Failed to send record {} on topic {}", event, topic);
             }
 
             @Override
             public void onSuccess(SendResult<String, SpecificRecordAdapter> sendResult) {
-                logger.info("Successfully send send {} on {} ", event, topic);
+                logger.info("Successfully send record {} on topic {}", event, topic);
             }
         };
     }
