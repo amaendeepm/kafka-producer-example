@@ -2,7 +2,7 @@ package dk.martincallesen.kafka;
 
 import dk.martincallesen.datamodel.event.Account;
 import dk.martincallesen.datamodel.event.SpecificRecordAdapter;
-import dk.martincallesen.kafka.producer.AccountProducer;
+import dk.martincallesen.kafka.producer.SpecificRecordProducer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 class KafkaProducerApplicationSystemIntegration {
 
     @Autowired
-    private AccountProducer accountProducer;
+    private SpecificRecordProducer specificRecordProducer;
 
     @Test
     void isAccountSendToTopic() {
@@ -23,7 +23,7 @@ class KafkaProducerApplicationSystemIntegration {
                 .setReg(4321)
                 .setNumber(1987654321)
                 .build();
-        accountProducer.send(new SpecificRecordAdapter(accountChange)).addCallback(new ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>>() {
+        specificRecordProducer.send(new SpecificRecordAdapter(accountChange)).addCallback(new ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 Assertions.fail("Failed to send account");

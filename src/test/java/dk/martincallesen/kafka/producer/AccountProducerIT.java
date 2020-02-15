@@ -24,7 +24,7 @@ public class AccountProducerIT {
     public static final String TOPIC = "test-account-topic";
 
     @Autowired
-    private AccountProducer accountProducer;
+    private SpecificRecordProducer specificRecordProducer;
 
     @Test
     void sendAccountChangeEvent() {
@@ -34,7 +34,7 @@ public class AccountProducerIT {
                 .setNumber(1234567890)
                 .build();
         final SpecificRecordAdapter recordAdapter = new SpecificRecordAdapter(accountEvent);
-        accountProducer.send(TOPIC, recordAdapter).addCallback(expectSendSuccess());
+        specificRecordProducer.send(TOPIC, recordAdapter).addCallback(expectSendSuccess());
     }
 
     private ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>> expectSendSuccess() {
