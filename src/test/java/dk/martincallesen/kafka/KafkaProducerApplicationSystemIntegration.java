@@ -23,7 +23,8 @@ class KafkaProducerApplicationSystemIntegration {
                 .setReg(4321)
                 .setNumber(1987654321)
                 .build();
-        specificRecordProducer.send(new SpecificRecordAdapter(accountChange)).addCallback(new ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>>() {
+        final SpecificRecordAdapter record = new SpecificRecordAdapter(accountChange);
+        specificRecordProducer.send(record).addCallback(new ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>>() {
             @Override
             public void onFailure(Throwable throwable) {
                 Assertions.fail("Failed to send account");

@@ -9,10 +9,10 @@ import java.io.IOException;
 import java.util.Map;
 
 public class KafkaSerializer<T extends SpecificRecordAdapter> implements Serializer<T> {
-    private SpecificRecordSerializer<T> avroSerializer;
+    private SpecificRecordSerializer<T> recordSerializer;
 
     public KafkaSerializer() {
-        this.avroSerializer = new SpecificRecordSerializer<>();
+        this.recordSerializer = new SpecificRecordSerializer<>();
     }
 
     @Override
@@ -28,9 +28,8 @@ public class KafkaSerializer<T extends SpecificRecordAdapter> implements Seriali
     @Override
     public byte[] serialize(String topic, T data) {
         try {
-            return avroSerializer.serialize(topic, data);
-        } catch (
-                IOException ex) {
+            return recordSerializer.serialize(topic, data);
+        } catch (IOException ex) {
             throw new SerializationException("Can't serialize data='" + data + "' for topic='" + topic + "'", ex);
         }
     }

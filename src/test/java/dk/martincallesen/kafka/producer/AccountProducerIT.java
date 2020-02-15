@@ -46,7 +46,7 @@ public class AccountProducerIT {
 
             @Override
             public void onSuccess(SendResult<String, SpecificRecordAdapter> sendResult) {
-                assertNotNull(sendResult);
+                assertNotNull(sendResult, "Sending");
             }
         };
     }
