@@ -12,8 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -34,10 +33,10 @@ public class AccountProducerIT {
                 .setNumber(1234567890)
                 .build();
         final SpecificRecordAdapter recordAdapter = new SpecificRecordAdapter(accountEvent);
-        specificRecordProducer.send(TOPIC, recordAdapter).addCallback(expectSendSuccess());
+        specificRecordProducer.send(TOPIC, recordAdapter).addCallback(expectSendSuccess(accountEvent));
     }
 
-    private ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>> expectSendSuccess() {
+    private ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>> expectSendSuccess(Account accountEvent) {
         return new ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -47,6 +46,7 @@ public class AccountProducerIT {
             @Override
             public void onSuccess(SendResult<String, SpecificRecordAdapter> sendResult) {
                 assertNotNull(sendResult, "Sending");
+                assertEquals(accountEvent, sendResult.getProducerRecord().value().getRecord());
             }
         };
     }
