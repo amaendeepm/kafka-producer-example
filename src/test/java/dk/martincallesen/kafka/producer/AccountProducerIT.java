@@ -2,6 +2,7 @@ package dk.martincallesen.kafka.producer;
 
 import dk.martincallesen.datamodel.event.Account;
 import dk.martincallesen.datamodel.event.SpecificRecordAdapter;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
@@ -19,35 +23,39 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @EmbeddedKafka(topics = AccountProducerIT.TOPIC,
         bootstrapServersProperty = "spring.kafka.bootstrap-servers")
-public class AccountProducerIT {
+public class AccountProducerIT implements ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>>{
     public static final String TOPIC = "test-account-topic";
 
     @Autowired
-    private SpecificRecordProducer specificRecordProducer;
+    private SpecificRecordProducer producer;
+
+    private Account sendAccount;
+    private CountDownLatch latch;
+
+    @BeforeEach
+    void setupLatch(){
+        sendAccount = null;
+        latch = new CountDownLatch(1);
+    }
 
     @Test
-    void sendAccountChangeEvent() {
+    void sendAccountChangeEvent() throws InterruptedException {
         Account accountEvent = Account.newBuilder()
                 .setName("MyAccount")
                 .setReg(1234)
                 .setNumber(1234567890)
                 .build();
-        final SpecificRecordAdapter recordAdapter = new SpecificRecordAdapter(accountEvent);
-        specificRecordProducer.send(TOPIC, recordAdapter).addCallback(expectSendSuccess(accountEvent));
+        producer.send(TOPIC, new SpecificRecordAdapter(accountEvent)).addCallback(this);
+        latch.await(10, TimeUnit.SECONDS);
+        assertEquals(accountEvent, sendAccount, "Sending record");
     }
 
-    private ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>> expectSendSuccess(Account accountEvent) {
-        return new ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-                fail("Sending");
-            }
+    @Override
+    public void onFailure(Throwable throwable) {}
 
-            @Override
-            public void onSuccess(SendResult<String, SpecificRecordAdapter> sendResult) {
-                assertNotNull(sendResult, "Sending");
-                assertEquals(accountEvent, sendResult.getProducerRecord().value().getRecord());
-            }
-        };
+    @Override
+    public void onSuccess(SendResult<String, SpecificRecordAdapter> sendResult) {
+        this.sendAccount = (Account) sendResult.getProducerRecord().value().getRecord();
+        latch.countDown();
     }
 }

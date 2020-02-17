@@ -46,7 +46,7 @@ public class KafkaProducerConfig {
 
     @Bean
     public NewTopic accountTopic() {
-        return TopicBuilder.name(SpecificRecordProducer.TOPIC)
+        return TopicBuilder.name("account")
                 .partitions(10)
                 .replicas(1)
                 .compact()
