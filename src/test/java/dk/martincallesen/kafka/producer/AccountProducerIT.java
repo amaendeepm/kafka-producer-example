@@ -29,12 +29,12 @@ public class AccountProducerIT implements ListenableFutureCallback<SendResult<St
     @Autowired
     private SpecificRecordProducer producer;
 
-    private Account actualAccount;
+    private SpecificRecordAdapter actualRecord;
     private CountDownLatch latch;
 
     @BeforeEach
     void setup(){
-        actualAccount = null;
+        actualRecord = null;
         latch = new CountDownLatch(1);
     }
 
@@ -45,9 +45,10 @@ public class AccountProducerIT implements ListenableFutureCallback<SendResult<St
                 .setReg(1234)
                 .setNumber(1234567890)
                 .build();
-        producer.send(TOPIC, new SpecificRecordAdapter(expectedAccount)).addCallback(this);
+        final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(expectedAccount);
+        producer.send(TOPIC, expectedRecord).addCallback(this);
         latch.await(10, TimeUnit.SECONDS);
-        assertEquals(expectedAccount, actualAccount, "Sending record");
+        assertEquals(expectedRecord, actualRecord, "Sending record");
     }
 
     @Override
@@ -55,7 +56,7 @@ public class AccountProducerIT implements ListenableFutureCallback<SendResult<St
 
     @Override
     public void onSuccess(SendResult<String, SpecificRecordAdapter> sendResult) {
-        this.actualAccount = (Account) sendResult.getProducerRecord().value().getRecord();
+        this.actualRecord = sendResult.getProducerRecord().value();
         latch.countDown();
     }
 }
