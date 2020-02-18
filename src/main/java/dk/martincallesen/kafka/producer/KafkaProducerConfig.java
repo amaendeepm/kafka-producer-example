@@ -20,6 +20,8 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class KafkaProducerConfig {
+    public static final String ACCOUNT_TOPIC = "account";
+    public static final String CUSTOMER_TOPIC = "customer";
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
@@ -46,7 +48,7 @@ public class KafkaProducerConfig {
 
     @Bean
     public NewTopic accountTopic() {
-        return TopicBuilder.name("account")
+        return TopicBuilder.name(ACCOUNT_TOPIC)
                 .partitions(10)
                 .replicas(1)
                 .compact()
@@ -54,7 +56,7 @@ public class KafkaProducerConfig {
     }
     @Bean
     public NewTopic customerTopic() {
-        return TopicBuilder.name("customer")
+        return TopicBuilder.name(CUSTOMER_TOPIC)
                 .partitions(10)
                 .replicas(1)
                 .compact()

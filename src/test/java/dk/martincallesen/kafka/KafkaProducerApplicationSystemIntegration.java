@@ -15,6 +15,9 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static dk.martincallesen.kafka.producer.KafkaProducerConfig.ACCOUNT_TOPIC;
+import static dk.martincallesen.kafka.producer.KafkaProducerConfig.CUSTOMER_TOPIC;
+
 @SpringBootTest
 class KafkaProducerApplicationSystemIntegration implements ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>> {
 
@@ -38,7 +41,7 @@ class KafkaProducerApplicationSystemIntegration implements ListenableFutureCallb
                 .setNumber(1987654321)
                 .build();
         final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(accountChange);
-        producer.send("account", expectedRecord).addCallback(this);
+        producer.send(ACCOUNT_TOPIC, expectedRecord).addCallback(this);
         latch.await(10, TimeUnit.SECONDS);
         Assertions.assertEquals(expectedRecord, actualRecord);
     }
@@ -63,7 +66,7 @@ class KafkaProducerApplicationSystemIntegration implements ListenableFutureCallb
                 .setAutomatedEmail(true)
                 .build();
         final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(customerChange);
-        producer.send("customer", expectedRecord).addCallback(this);
+        producer.send(CUSTOMER_TOPIC, expectedRecord).addCallback(this);
         latch.await(10, TimeUnit.SECONDS);
         Assertions.assertEquals(expectedRecord, actualRecord);
     }
