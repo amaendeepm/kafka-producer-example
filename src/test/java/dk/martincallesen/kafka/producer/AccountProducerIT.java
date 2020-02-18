@@ -39,7 +39,7 @@ public class AccountProducerIT implements ListenableFutureCallback<SendResult<St
     }
 
     @Test
-    void sendAccountChangeEvent() throws InterruptedException {
+    void produceAccountChangeEvent() throws InterruptedException {
         Account expectedAccount = Account.newBuilder()
                 .setName("MyAccount")
                 .setReg(1234)
