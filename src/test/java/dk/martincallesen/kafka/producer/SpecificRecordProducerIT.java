@@ -1,7 +1,9 @@
 package dk.martincallesen.kafka.producer;
 
 import dk.martincallesen.datamodel.event.Account;
+import dk.martincallesen.datamodel.event.Customer;
 import dk.martincallesen.datamodel.event.SpecificRecordAdapter;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,10 +23,11 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@EmbeddedKafka(topics = AccountProducerIT.TOPIC,
+@EmbeddedKafka(topics = {SpecificRecordProducerIT.ACCOUNT_TOPIC, SpecificRecordProducerIT.CUSTOMER_TOPIC},
         bootstrapServersProperty = "spring.kafka.bootstrap-servers")
-public class AccountProducerIT implements ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>>{
-    public static final String TOPIC = "test-account-topic";
+public class SpecificRecordProducerIT implements ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>>{
+    public static final String ACCOUNT_TOPIC = "test-account-topic";
+    public static final String CUSTOMER_TOPIC = "test-customer-topic";
 
     @Autowired
     private SpecificRecordProducer producer;
@@ -39,14 +42,14 @@ public class AccountProducerIT implements ListenableFutureCallback<SendResult<St
     }
 
     @Test
-    void produceAccountChangeEvent() throws InterruptedException {
+    void isAccountChangeSend() throws InterruptedException {
         Account accountChange = Account.newBuilder()
                 .setName("MyAccount")
                 .setReg(1234)
                 .setNumber(1234567890)
                 .build();
         final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(accountChange);
-        producer.send(TOPIC, expectedRecord).addCallback(this);
+        producer.send(ACCOUNT_TOPIC, expectedRecord).addCallback(this);
         latch.await(10, TimeUnit.SECONDS);
         assertEquals(expectedRecord, actualRecord, "Sending record");
     }
@@ -58,5 +61,21 @@ public class AccountProducerIT implements ListenableFutureCallback<SendResult<St
     public void onSuccess(SendResult<String, SpecificRecordAdapter> sendResult) {
         this.actualRecord = sendResult.getProducerRecord().value();
         latch.countDown();
+    }
+
+    @Test
+    void isCustomerChangeSend() throws InterruptedException {
+        final Customer customerChange = Customer.newBuilder()
+                .setFirstName("Michael")
+                .setLastName("Hansen")
+                .setAge(30)
+                .setHeight(180)
+                .setWeight(85)
+                .setAutomatedEmail(true)
+                .build();
+        final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(customerChange);
+        producer.send(CUSTOMER_TOPIC, expectedRecord).addCallback(this);
+        latch.await(10, TimeUnit.SECONDS);
+        Assertions.assertEquals(expectedRecord, actualRecord);
     }
 }

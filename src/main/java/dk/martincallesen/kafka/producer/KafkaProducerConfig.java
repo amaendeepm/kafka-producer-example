@@ -52,4 +52,12 @@ public class KafkaProducerConfig {
                 .compact()
                 .build();
     }
+    @Bean
+    public NewTopic customerTopic() {
+        return TopicBuilder.name("customer")
+                .partitions(10)
+                .replicas(1)
+                .compact()
+                .build();
+    }
 }

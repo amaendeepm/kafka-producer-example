@@ -1,6 +1,7 @@
 package dk.martincallesen.kafka;
 
 import dk.martincallesen.datamodel.event.Account;
+import dk.martincallesen.datamodel.event.Customer;
 import dk.martincallesen.datamodel.event.SpecificRecordAdapter;
 import dk.martincallesen.kafka.producer.SpecificRecordProducer;
 import org.junit.jupiter.api.Assertions;
@@ -30,7 +31,7 @@ class KafkaProducerApplicationSystemIntegration implements ListenableFutureCallb
     }
 
     @Test
-    void isAccountSendToTopic() throws InterruptedException {
+        void isAccountChangeSend() throws InterruptedException {
         Account accountChange = Account.newBuilder()
                 .setName("CommonAccount")
                 .setReg(4321)
@@ -51,5 +52,19 @@ class KafkaProducerApplicationSystemIntegration implements ListenableFutureCallb
         this.latch.countDown();
     }
 
-
+    @Test
+    void isCustomerChangeSend() throws InterruptedException {
+        final Customer customerChange = Customer.newBuilder()
+                .setFirstName("Michael")
+                .setLastName("Hansen")
+                .setAge(30)
+                .setHeight(180)
+                .setWeight(85)
+                .setAutomatedEmail(true)
+                .build();
+        final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(customerChange);
+        producer.send("customer", expectedRecord).addCallback(this);
+        latch.await(10, TimeUnit.SECONDS);
+        Assertions.assertEquals(expectedRecord, actualRecord);
+    }
 }
