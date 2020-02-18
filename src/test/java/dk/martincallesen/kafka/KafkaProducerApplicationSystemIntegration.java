@@ -20,33 +20,36 @@ class KafkaProducerApplicationSystemIntegration implements ListenableFutureCallb
     @Autowired
     private SpecificRecordProducer producer;
 
-    private Account actualAccount;
+    private SpecificRecordAdapter actualRecord;
     private CountDownLatch latch;
 
     @BeforeEach
     void setupLatch(){
-        actualAccount = null;
+        actualRecord = null;
         latch = new CountDownLatch(1);
     }
 
     @Test
     void isAccountSendToTopic() throws InterruptedException {
-        Account expectedAccount = Account.newBuilder()
+        Account accountChange = Account.newBuilder()
                 .setName("CommonAccount")
                 .setReg(4321)
                 .setNumber(1987654321)
                 .build();
-        producer.send("account", new SpecificRecordAdapter(expectedAccount)).addCallback(this);
+        final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(accountChange);
+        producer.send("account", expectedRecord).addCallback(this);
         latch.await(10, TimeUnit.SECONDS);
-        Assertions.assertEquals(expectedAccount, actualAccount);
+        Assertions.assertEquals(expectedRecord, actualRecord);
     }
 
     @Override
     public void onFailure(Throwable throwable) {}
 
     @Override
-    public void onSuccess(SendResult<String, SpecificRecordAdapter> stringSpecificRecordAdapterSendResult) {
-        this.actualAccount = (Account) stringSpecificRecordAdapterSendResult.getProducerRecord().value().getRecord();
+    public void onSuccess(SendResult<String, SpecificRecordAdapter> sendResult) {
+        this.actualRecord = sendResult.getProducerRecord().value();
         this.latch.countDown();
     }
+
+
 }
