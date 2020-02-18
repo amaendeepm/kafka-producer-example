@@ -40,12 +40,12 @@ public class AccountProducerIT implements ListenableFutureCallback<SendResult<St
 
     @Test
     void produceAccountChangeEvent() throws InterruptedException {
-        Account expectedAccount = Account.newBuilder()
+        Account accountChange = Account.newBuilder()
                 .setName("MyAccount")
                 .setReg(1234)
                 .setNumber(1234567890)
                 .build();
-        final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(expectedAccount);
+        final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(accountChange);
         producer.send(TOPIC, expectedRecord).addCallback(this);
         latch.await(10, TimeUnit.SECONDS);
         assertEquals(expectedRecord, actualRecord, "Sending record");
