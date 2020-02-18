@@ -1,7 +1,6 @@
 package dk.martincallesen.kafka.producer;
 
 import dk.martincallesen.datamodel.event.SpecificRecordAdapter;
-import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
@@ -11,7 +10,7 @@ import java.util.UUID;
 
 @Component
 public class SpecificRecordProducer {
-    private SendResultLogger logger = new SendResultLogger(LoggerFactory.getLogger(SpecificRecordProducer.class));
+    private SendResultLogger logger = new SendResultLogger(SpecificRecordProducer.class);
     private KafkaTemplate<String, SpecificRecordAdapter> kafkaTemplate;
 
     public SpecificRecordProducer(KafkaTemplate<String, SpecificRecordAdapter> kafkaTemplate) {

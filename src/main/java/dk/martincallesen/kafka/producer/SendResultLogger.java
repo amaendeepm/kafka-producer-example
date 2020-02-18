@@ -2,14 +2,15 @@ package dk.martincallesen.kafka.producer;
 
 import dk.martincallesen.datamodel.event.SpecificRecordAdapter;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 public class SendResultLogger {
     private final Logger logger;
 
-    public SendResultLogger(Logger logger) {
-        this.logger = logger;
+    public SendResultLogger(Class aClass){
+        this.logger = LoggerFactory.getLogger(aClass);
     }
 
     public ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>> log(String topic, SpecificRecordAdapter record) {
