@@ -1,8 +1,8 @@
-package dk.martincallesen.kafka.producer;
+package com.bec.techacademy.learnkafka.examples.producer;
 
-import dk.martincallesen.datamodel.event.Account;
-import dk.martincallesen.datamodel.event.Customer;
-import dk.martincallesen.datamodel.event.SpecificRecordAdapter;
+import com.bec.techacademy.learnkafka.datamodel.event.Account;
+import com.bec.techacademy.learnkafka.datamodel.event.Customer;
+import com.bec.techacademy.learnkafka.datamodel.event.SpecificRecordAdapter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

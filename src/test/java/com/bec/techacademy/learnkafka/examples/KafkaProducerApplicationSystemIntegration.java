@@ -1,9 +1,10 @@
-package dk.martincallesen.kafka;
+package com.bec.techacademy.learnkafka.examples;
 
+import com.bec.techacademy.learnkafka.examples.producer.KafkaProducerConfig;
+import com.bec.techacademy.learnkafka.examples.producer.SpecificRecordProducer;
 import dk.martincallesen.datamodel.event.Account;
 import dk.martincallesen.datamodel.event.Customer;
 import dk.martincallesen.datamodel.event.SpecificRecordAdapter;
-import dk.martincallesen.kafka.producer.SpecificRecordProducer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +15,6 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-
-import static dk.martincallesen.kafka.producer.KafkaProducerConfig.ACCOUNT_TOPIC;
-import static dk.martincallesen.kafka.producer.KafkaProducerConfig.CUSTOMER_TOPIC;
 
 @SpringBootTest
 class KafkaProducerApplicationSystemIntegration implements ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>> {
@@ -41,7 +39,7 @@ class KafkaProducerApplicationSystemIntegration implements ListenableFutureCallb
                 .setNumber(1987654321)
                 .build();
         final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(accountChange);
-        producer.send(ACCOUNT_TOPIC, expectedRecord).addCallback(this);
+        producer.send(KafkaProducerConfig.ACCOUNT_TOPIC, expectedRecord).addCallback(this);
         latch.await(10, TimeUnit.SECONDS);
         Assertions.assertEquals(expectedRecord, actualRecord);
     }
@@ -66,7 +64,7 @@ class KafkaProducerApplicationSystemIntegration implements ListenableFutureCallb
                 .setAutomatedEmail(true)
                 .build();
         final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(customerChange);
-        producer.send(CUSTOMER_TOPIC, expectedRecord).addCallback(this);
+        producer.send(KafkaProducerConfig.CUSTOMER_TOPIC, expectedRecord).addCallback(this);
         latch.await(10, TimeUnit.SECONDS);
         Assertions.assertEquals(expectedRecord, actualRecord);
     }

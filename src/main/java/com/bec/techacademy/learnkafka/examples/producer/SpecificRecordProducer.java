@@ -1,4 +1,4 @@
-package dk.martincallesen.kafka.producer;
+package com.bec.techacademy.learnkafka.examples.producer;
 
 import dk.martincallesen.datamodel.event.SpecificRecordAdapter;
 import org.springframework.kafka.core.KafkaTemplate;

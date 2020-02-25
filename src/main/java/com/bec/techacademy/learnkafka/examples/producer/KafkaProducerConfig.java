@@ -1,7 +1,7 @@
-package dk.martincallesen.kafka.producer;
+package com.bec.techacademy.learnkafka.examples.producer;
 
-import dk.martincallesen.datamodel.event.SpecificRecordAdapter;
-import dk.martincallesen.kafka.serializer.KafkaSerializer;
+import com.bec.techacademy.learnkafka.datamodel.event.SpecificRecordAdapter;
+import com.bec.techacademy.learnkafka.examples.serializer.KafkaSerializer;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
