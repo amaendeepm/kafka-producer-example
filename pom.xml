@@ -8,7 +8,7 @@
         <version>2.2.4.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>dk.martincallesen.kafka</groupId>
+    <groupId>com.bec.techacademy.learnkafka</groupId>
     <artifactId>kafka-producer-example</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>kafka-producer-example</name>
@@ -20,7 +20,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>dk.martincallesen.datamodel.event</groupId>
+            <groupId>com.bec.techacademy.learnkafka.datamodel.event</groupId>
             <artifactId>bank-datamodel-example</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
