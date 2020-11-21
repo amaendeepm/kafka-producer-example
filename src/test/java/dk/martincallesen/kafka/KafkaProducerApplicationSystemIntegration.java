@@ -7,8 +7,6 @@ import dk.martincallesen.kafka.producer.EmbeddedKafkaIntegrationTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.TimeUnit;
-
 import static dk.martincallesen.kafka.producer.KafkaProducerConfig.ACCOUNT_TOPIC;
 import static dk.martincallesen.kafka.producer.KafkaProducerConfig.CUSTOMER_TOPIC;
 
@@ -22,8 +20,7 @@ class KafkaProducerApplicationSystemIntegration extends EmbeddedKafkaIntegration
                 .setNumber(1987654321)
                 .build();
         final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(accountChange);
-        producer.send(ACCOUNT_TOPIC, expectedRecord).addCallback(this);
-        latch.await(10, TimeUnit.SECONDS);
+        SpecificRecordAdapter actualRecord = sendRecordTo(ACCOUNT_TOPIC, expectedRecord);
         Assertions.assertEquals(expectedRecord, actualRecord);
     }
 
@@ -38,8 +35,7 @@ class KafkaProducerApplicationSystemIntegration extends EmbeddedKafkaIntegration
                 .setAutomatedEmail(true)
                 .build();
         final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(customerChange);
-        producer.send(CUSTOMER_TOPIC, expectedRecord).addCallback(this);
-        latch.await(10, TimeUnit.SECONDS);
+        SpecificRecordAdapter actualRecord = sendRecordTo(CUSTOMER_TOPIC, expectedRecord);
         Assertions.assertEquals(expectedRecord, actualRecord);
     }
 }

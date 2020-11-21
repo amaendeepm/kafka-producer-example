@@ -10,8 +10,6 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.concurrent.TimeUnit;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
@@ -30,8 +28,7 @@ public class SpecificRecordProducerIT extends EmbeddedKafkaIntegrationTest {
                 .setNumber(1234567890)
                 .build();
         final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(accountChange);
-        producer.send(ACCOUNT_TOPIC, expectedRecord).addCallback(this);
-        latch.await(10, TimeUnit.SECONDS);
+        SpecificRecordAdapter actualRecord = sendRecordTo(ACCOUNT_TOPIC, expectedRecord);
         assertEquals(expectedRecord, actualRecord, "Sending record");
     }
 
@@ -46,8 +43,7 @@ public class SpecificRecordProducerIT extends EmbeddedKafkaIntegrationTest {
                 .setAutomatedEmail(true)
                 .build();
         final SpecificRecordAdapter expectedRecord = new SpecificRecordAdapter(customerChange);
-        producer.send(CUSTOMER_TOPIC, expectedRecord).addCallback(this);
-        latch.await(10, TimeUnit.SECONDS);
+        SpecificRecordAdapter actualRecord = sendRecordTo(CUSTOMER_TOPIC, expectedRecord);
         Assertions.assertEquals(expectedRecord, actualRecord);
     }
 }

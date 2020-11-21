@@ -8,20 +8,27 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
 public abstract class EmbeddedKafkaIntegrationTest implements ListenableFutureCallback<SendResult<String, SpecificRecordAdapter>> {
 
     @Autowired
-    protected SpecificRecordProducer producer;
+    private SpecificRecordProducer producer;
 
-    protected SpecificRecordAdapter actualRecord;
-    protected CountDownLatch latch;
+    private SpecificRecordAdapter actualRecord;
+    private CountDownLatch latch;
 
     @BeforeEach
     void setupLatch(){
         actualRecord = null;
         latch = new CountDownLatch(1);
+    }
+
+    public SpecificRecordAdapter sendRecordTo(String customerTopic, SpecificRecordAdapter expectedRecord) throws InterruptedException {
+        producer.send(customerTopic, expectedRecord).addCallback(this);
+        latch.await(10, TimeUnit.SECONDS);
+        return this.actualRecord;
     }
 
     @Override
