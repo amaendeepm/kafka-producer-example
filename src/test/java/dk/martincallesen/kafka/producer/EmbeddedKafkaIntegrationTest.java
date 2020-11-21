@@ -38,5 +38,7 @@ public abstract class EmbeddedKafkaIntegrationTest implements ListenableFutureCa
     }
 
     @Override
-    public void onFailure(Throwable throwable) {}
+    public void onFailure(Throwable throwable) {
+        latch.countDown();
+    }
 }
